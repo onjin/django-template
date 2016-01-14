@@ -1,0 +1,24 @@
+{% load i18n staticfiles %}{% if not request.is_ajax %}<!DOCTYPE html>
+<html lang="{{ request.lang }}">
+	<head>
+		<meta name="robots" content="noindex">
+		<link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+		{% block head %}
+		<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+		<meta http-equiv="x-ua-compatible" content="IE=Edge"/>
+		{% block styles %}
+		<link rel="stylesheet" href="" type="text/css" />
+		{% endblock %}
+		{% endblock %}
+	</head>
+	<body class="{% block class %}{% endblock %}">
+	<header>header</header>
+	<main>{% endif %}
+	{% block main %}
+	<h1>{% block title %}{% endblock %}</h1>
+	{% block content %}{% endblock content %}
+	{% endblock main %}
+	{% if not request.is_ajax %}</main>
+	<footer>footer</footer>
+	</body>
+</html>{% endif %}
