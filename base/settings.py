@@ -31,6 +31,9 @@ def env(var_name, default=None):
         error_msg = "Set the %s environment variable" % var_name
         raise ImproperlyConfigured(error_msg)
 
+
+LOGGING_LEVEL = env('LOGGING_LEVEL', 'INFO')
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PUBLIC_DIR = os.path.join(BASE_DIR, 'public')
@@ -65,6 +68,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE_CLASSES = [
+    'log_request_id.middleware.RequestIDMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -149,6 +153,14 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(PUBLIC_DIR, 'static')
 STATIC_URL = '/static/'
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'base', 'static'),
+)
+
 if not os.path.exists(MEDIA_ROOT):
     os.mkdir(MEDIA_ROOT)
 
@@ -165,3 +177,35 @@ SUIT_CONFIG = dict(
     ),
     CONFIRM_UNSAVED_CHANGES = True,
 )
+
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'root': {
+        'level': LOGGING_LEVEL,
+        'handlers': ['console'],
+    },
+    'filters': {
+        'request_id': {
+            '()': 'log_request_id.filters.RequestIDFilter',
+        }
+    },
+    'formatters': {
+        'standard': {
+            'format': '%(levelname)-8s [%(asctime)s] [%(request_id)s] %(name)s:%(lineno)s %(message)s',
+            'datefmt': "%d/%b/%Y %H:%M:%S"
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': LOGGING_LEVEL,
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+            'filters': ['request_id']
+        },
+
+    },
+}
+
+LOG_REQUESTS = True
