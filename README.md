@@ -7,7 +7,6 @@ Put settings withing a local `.env` file.
 For example:
 
 ```
-PORT=80
 SECRET_KEY=asdf
 DATABASE_URL=postgres://user:pass@docker0ip/dbname
 DEBUG=1
