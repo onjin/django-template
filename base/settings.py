@@ -171,9 +171,11 @@ if not os.path.exists(STATIC_ROOT):
 SUIT_CONFIG = dict(
     ADMIN_NAME=HOSTNAME,
     MENU=(
-        # dict(label=_("Stats"), icon='icon-signal', url='/admin/stats'),
-        dict(app='core', icon='icon-lock'),
-        dict(app='items', icon='icon-barcode'),
+        {
+            'label': _('Configuration'),
+            'icon': 'icon-cog',
+            'models': ('auth.user', 'auth.group')
+        },
     ),
     CONFIRM_UNSAVED_CHANGES = True,
 )
